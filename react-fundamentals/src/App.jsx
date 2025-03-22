@@ -42,31 +42,49 @@
 // }
 
 // export default Timer;
+import React, { useState, memo } from "react";
 
+function UnderstandRerender() {
+  const [changeName, setChangeName] = useState("My name is Harkirat");
 
-import React,{useState,useEffect} from "react";
-
-function UnderstandRerender(){
-
-  const [changeName,SetChangeName] = useState("My name is harkirat");
-
-
-  function ChangeNameHandler(){
-      SetChangeName(`My name is ${Math.random()}`)
+  function ChangeNameHandler() {
+    setChangeName(`My name is ${Math.random()}`);
   }
-  return(<>
-  <br/><br/><br /><br />
-    <button onClick={ChangeNameHandler}>Click me to change the title</button>
-    <br/><br />
-    <ChangeText changeName={changeName}></ChangeText>
-    <ChangeText changeName="My name is kiran"/>
-  </>)
+
+  return (
+    <>
+      <br />
+      <br />
+      <button onClick={ChangeNameHandler}>Click me to change the title</button>
+      <br />
+      <br />
+
+      {/* Only the dynamic ChangeText component re-renders */}
+      <DynamicChangeText changeName={changeName} />
+
+      {/* Static ChangeText components remain the same */}
+      <StaticChangeText />
+      <StaticChangeText />
+      <StaticChangeText />
+      <StaticChangeText />
+      <StaticChangeText />
+      <StaticChangeText />
+      <StaticChangeText />
+    </>
+  );
 }
 
-function ChangeText(props){
-  return(<>
-    <p>{props.changeName}</p>
-  </>)
-}
+// Component for dynamic change, will rerender only when changeName changes
+const DynamicChangeText = memo(({ changeName }) => {
+  console.log("Dynamic ChangeText re-rendered");
+  return <div>{changeName}</div>;
+});
+
+// Component for static change, will not re-render when props don't change
+const StaticChangeText = memo(() => {
+  console.log("Static ChangeText re-rendered");
+  return <div>My name is Kiran</div>;
+});
 
 export default UnderstandRerender;
+
